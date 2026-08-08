@@ -165,14 +165,6 @@
       margin:14px auto 22px;
       max-width:600px;
     }
-    .answer-key{
-      text-align:center;
-      color:var(--muted);
-      font-size:16px;
-      margin:-8px auto 20px;
-      max-width:600px;
-    }
-    .answer-key b{color:#4a45c8;letter-spacing:.08em}
     .options{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
@@ -381,12 +373,12 @@ const sections = [
     title:"4. 拆音能力",
     icon:"✂️",
     questions:[
-      {type:"read", manual:true, prompt:"請小朋友把 lip 拆成三個聲音讀出來", focus:"💋 lip", answerKey:"l – i – p", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
-      {type:"read", manual:true, prompt:"請小朋友把 tap 拆成三個聲音讀出來", focus:"🚰 tap", answerKey:"t – a – p", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
-      {type:"read", manual:true, prompt:"請小朋友把 pin 拆成三個聲音讀出來", focus:"📌 pin", answerKey:"p – i – n", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
-      {type:"read", manual:true, prompt:"請小朋友把 log 拆成三個聲音讀出來", focus:"🪵 log", answerKey:"l – o – g", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
-      {type:"read", manual:true, prompt:"請小朋友把 cab 拆成三個聲音讀出來", focus:"🚕 cab", answerKey:"c – a – b", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
-      {type:"read", manual:true, prompt:"請小朋友把 hut 拆成三個聲音讀出來", focus:"🛖 hut", answerKey:"h – u – t", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0}
+      {type:"read", manual:true, prompt:"請小朋友把 lip 拆成三個聲音讀出來", focus:"lip", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 tap 拆成三個聲音讀出來", focus:"tap", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 pin 拆成三個聲音讀出來", focus:"pin", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 log 拆成三個聲音讀出來", focus:"log", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 cab 拆成三個聲音讀出來", focus:"cab", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 hut 拆成三個聲音讀出來", focus:"hut", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0}
     ]
   }
 ];
@@ -437,9 +429,6 @@ function renderQuestion(){
   let extra="";
   if(q.type==="letterPicture"){
     extra=`<div class="sound-seq">${q.letter}</div>`;
-  }else if(q.type==="read"){
-    extra=`<div class="prompt-box">${q.focus}</div>
-     <div class="answer-key">正確拆音：<b>${q.answerKey}</b>（供家長參考）</div>`;
   }else if(q.focus){
     extra=`<div class="${q.type==="blend" ? "sound-seq" : "prompt-box"}">${q.focus}</div>`;
   }
