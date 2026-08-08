@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K2 Phonics 小測試</title>
+  <style>
+    :root{
+      --bg:#fff9f2;
+      --card:#ffffff;
+      --text:#263238;
+      --muted:#607d8b;
+      --primary:#6c63ff;
+      --primary2:#8b85ff;
+      --good:#2eaf6f;
+      --warn:#f4a62a;
+      --soft:#eef0ff;
+      --border:#e8e8ef;
+      --shadow:0 10px 30px rgba(42,45,90,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang HK","Noto Sans TC",Arial,sans-serif;
+      background:linear-gradient(180deg,#fff8ee 0%,#f7f7ff 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:920px;margin:0 auto;padding:20px}
+    .hero{
+      background:linear-gradient(135deg,#7069ff,#9d7bff);
+      color:white;
+      border-radius:26px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .hero h1{margin:0 0 8px;font-size:clamp(28px,5vw,44px)}
+    .hero p{margin:0;line-height:1.6;font-size:17px}
+    .notice{
+      margin-top:14px;
+      background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.25);
+      padding:12px 14px;
+      border-radius:14px;
+      font-size:14px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin:16px 0;
+    }
+    .start-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+    .skill{
+      background:#fafaff;
+      border:1px solid #ececff;
+      border-radius:18px;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+    }
+    .skill b{display:block;margin-bottom:5px}
+    .section-jump{
+      border:1px solid #c9c7ff;
+      border-radius:12px;
+      padding:9px 12px;
+      margin-top:14px;
+      background:#fff;
+      color:#4a45c8;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .section-jump:hover{background:#f0f0ff}
+    .big-btn,.next-btn,.restart-btn{
+      border:none;
+      border-radius:16px;
+      padding:15px 20px;
+      font-size:18px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .big-btn,.next-btn{
+      background:var(--primary);
+      color:#fff;
+      width:100%;
+      margin-top:18px;
+    }
+    .big-btn:hover,.next-btn:hover{transform:translateY(-1px);background:#5851ec}
+    .restart-btn{background:#eff0ff;color:#4a45c8}
+    .hidden{display:none!important}
+    .topline{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      margin-bottom:12px;
+      flex-wrap:wrap;
+    }
+    .section-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:var(--soft);
+      color:#4c47c8;
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:700;
+    }
+    .progress{
+      height:12px;
+      background:#ececf5;
+      border-radius:999px;
+      overflow:hidden;
+      margin:8px 0 20px;
+    }
+    .progress>div{
+      height:100%;
+      background:linear-gradient(90deg,#6c63ff,#a07eff);
+      width:0%;
+      transition:.3s;
+    }
+    .question{
+      text-align:center;
+      font-size:clamp(24px,5vw,38px);
+      font-weight:800;
+      margin:18px 0 8px;
+      line-height:1.35;
+    }
+    .sub{
+      text-align:center;
+      color:var(--muted);
+      margin-bottom:18px;
+      font-size:16px;
+    }
+    .prompt-box{
+      text-align:center;
+      background:#fffaf0;
+      border:2px dashed #f1c46f;
+      border-radius:18px;
+      padding:16px;
+      margin:14px auto 20px;
+      max-width:620px;
+      font-size:22px;
+      font-weight:700;
+    }
+    .sound-seq{
+      font-size:clamp(30px,7vw,54px);
+      letter-spacing:.12em;
+      font-weight:900;
+      color:#4a45c8;
+      text-align:center;
+      padding:18px;
+      background:#f4f4ff;
+      border-radius:18px;
+      margin:14px auto 22px;
+      max-width:600px;
+    }
+    .options{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+    .option{
+      border:2px solid #e9e9f2;
+      border-radius:18px;
+      background:#fff;
+      padding:16px 10px;
+      min-height:112px;
+      cursor:pointer;
+      font-size:20px;
+      font-weight:700;
+      transition:.18s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:8px;
+    }
+    .option:hover{border-color:#aaa7ff;transform:translateY(-2px)}
+    .option .emoji{font-size:46px}
+    .option.correct{background:#eafaf2;border-color:var(--good)}
+    .option.wrong{background:#fff0ef;border-color:#e56b61}
+    .option.disabled{pointer-events:none}
+    .option.masked{
+      position:relative;
+      cursor:not-allowed;
+      background:#f1f2f7;
+      border-color:#dfe1e8;
+    }
+    .option.masked>*{visibility:hidden}
+    .option.masked::after{
+      content:"🔒 已遮蓋";
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#69727a;
+      font-size:18px;
+    }
+    .unmask-wrap{text-align:center;margin:0 0 18px}
+    .unmask-btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 20px;
+      background:#f4a62a;
+      color:#fff;
+      font-size:17px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .unmask-btn:hover{background:#df921b}
+    .feedback{
+      text-align:center;
+      min-height:34px;
+      font-size:20px;
+      font-weight:800;
+      margin-top:16px;
+    }
+    .feedback.good{color:var(--good)}
+    .feedback.bad{color:#d85c53}
+    .report-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+    .result-card{
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      background:#fbfbff;
+    }
+    .result-card h3{margin:0 0 10px}
+    .score{
+      font-size:34px;
+      font-weight:900;
+      color:#4b46ca;
+    }
+    .level{
+      display:inline-block;
+      margin-top:6px;
+      padding:5px 10px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:14px;
+    }
+    .level.good{background:#e8f8ef;color:#1f8b55}
+    .level.mid{background:#fff4df;color:#b06a00}
+    .level.early{background:#fff0ef;color:#b34e46}
+    .summary-box{
+      background:#f5f5ff;
+      border-radius:18px;
+      padding:18px;
+      margin-top:18px;
+      line-height:1.7;
+    }
+    .parent-note{
+      margin-top:16px;
+      font-size:14px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+    @media(max-width:700px){
+      .start-grid,.report-grid{grid-template-columns:1fr}
+      .options{grid-template-columns:1fr}
+      .option{min-height:88px;flex-direction:row;justify-content:flex-start;padding-left:24px}
+      .option .emoji{font-size:38px}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>🌟 K2 Phonics 小測試</h1>
+    <p>完成四個小遊戲，看看你在字母聲音、聽音能力、拼讀及拆音方面的進度。</p>
+    <div class="notice">建議一次完成，約需 10–15 分鐘。家長可協助操作，但盡量不要提示答案。</div>
+  </section>
+
+  <section id="startScreen" class="card">
+    <h2>今天會測試四方面</h2>
+    <div class="start-grid">
+      <div class="skill"><b>1. 字母與常見聲音</b>看到字母，找出以該聲音開始的圖案。<button class="section-jump" onclick="startAtSection(0)">直接做這部分 ➜</button></div>
+      <div class="skill"><b>2. 聲音意識</b>找押韻字，以及辨認單字的第一個聲音。<button class="section-jump" onclick="startAtSection(1)">直接做這部分 ➜</button></div>
+      <div class="skill"><b>3. CVC 拼讀</b>把三個聲音合起來，讀出簡單單字。<button class="section-jump" onclick="startAtSection(2)">直接做這部分 ➜</button></div>
+      <div class="skill"><b>4. 拆音能力</b>把一個簡單單字拆成三個聲音。<button class="section-jump" onclick="startAtSection(3)">直接做這部分 ➜</button></div>
+    </div>
+    <button class="big-btn" onclick="startTest()">開始測試 🚀</button>
+  </section>
+
+  <section id="quizScreen" class="card hidden">
+    <div class="topline">
+      <div id="sectionPill" class="section-pill"></div>
+      <div id="counter"></div>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div id="questionArea"></div>
+    <div id="unmaskWrap" class="unmask-wrap hidden">
+      <button id="unmaskBtn" class="unmask-btn" onclick="unmaskOptions()">🔓 顯示答案選項</button>
+    </div>
+    <div id="options" class="options"></div>
+    <div id="feedback" class="feedback"></div>
+    <button id="nextBtn" class="next-btn hidden" onclick="nextQuestion()">下一題 ➜</button>
+  </section>
+
+  <section id="resultScreen" class="card hidden">
+    <h2>🎉 測試完成</h2>
+    <p>以下結果可用來了解現階段的相對進度，不是正式診斷或學校評估。</p>
+    <div id="reportGrid" class="report-grid"></div>
+    <div id="overallSummary" class="summary-box"></div>
+    <div class="parent-note">
+      <strong>家長閱讀提示：</strong>
+      若小朋友因不熟悉emoji、英文詞義、操作方式或當日狀態而失分，可以隔幾日重測一次。
+      最有參考價值的是：同一類能力在不同題目中是否穩定，而不是單次總分。
+    </div>
+    <button class="restart-btn" onclick="location.reload()">重新測試</button>
+  </section>
+</div>
+
+<script>
+const sections = [
+  {
+    id:"letters",
+    title:"1. 字母與常見聲音",
+    icon:"🔤",
+    questions:[
+      {type:"letterPicture", prompt:"哪一個圖案由 m 的聲音開始？", letter:"m", options:[["🌙","moon"],["🐟","fish"],["☀️","sun"]], answer:0},
+      {type:"letterPicture", prompt:"哪一個圖案由 s 的聲音開始？", letter:"s", options:[["🐶","dog"],["☀️","sun"],["🐱","cat"]], answer:1},
+      {type:"letterPicture", prompt:"哪一個圖案由 b 的聲音開始？", letter:"b", options:[["⚽","ball"],["🐟","fish"],["🍎","apple"]], answer:0},
+      {type:"letterPicture", prompt:"哪一個圖案由 f 的聲音開始？", letter:"f", options:[["🐟","fish"],["🌙","moon"],["🐶","dog"]], answer:0},
+      {type:"letterPicture", prompt:"哪一個圖案由 c 的聲音開始？", letter:"c", options:[["🐱","cat"],["☀️","sun"],["⚽","ball"]], answer:0},
+      {type:"letterPicture", prompt:"哪一個圖案由 d 的聲音開始？", letter:"d", options:[["🍎","apple"],["🐶","dog"],["🐟","fish"]], answer:1}
+    ]
+  },
+  {
+    id:"awareness",
+    title:"2. 聲音意識",
+    icon:"👂",
+    questions:[
+      {type:"rhyme", prompt:"哪一個字和 cat 押韻？", focus:"cat", options:[["🎩","hat"],["🐶","dog"],["☀️","sun"]], answer:0},
+      {type:"rhyme", prompt:"哪一個字和 dog 押韻？", focus:"dog", options:[["🐸","frog"],["🐱","cat"],["🐟","fish"]], answer:0},
+      {type:"rhyme", prompt:"哪一個字和 sun 押韻？", focus:"sun", options:[["🏃","run"],["🐱","cat"],["🌙","moon"]], answer:0},
+      {type:"initial", prompt:"moon 的第一個聲音是哪一個？", focus:"moon", options:[["m","m"],["s","s"],["f","f"]], answer:0},
+      {type:"initial", prompt:"fish 的第一個聲音是哪一個？", focus:"fish", options:[["d","d"],["f","f"],["b","b"]], answer:1},
+      {type:"initial", prompt:"sun 的第一個聲音是哪一個？", focus:"sun", options:[["c","c"],["m","m"],["s","s"]], answer:2}
+    ]
+  },
+  {
+    id:"blending",
+    title:"3. CVC 拼讀",
+    icon:"🧩",
+    questions:[
+      {type:"blend", prompt:"把聲音合起來，這是甚麼字？", focus:"c – a – t", options:[["🐱","cat"],["🐶","dog"],["☀️","sun"]], answer:0},
+      {type:"blend", prompt:"把聲音合起來，這是甚麼字？", focus:"d – o – g", options:[["🐟","fish"],["🐶","dog"],["🌙","moon"]], answer:1},
+      {type:"blend", prompt:"把聲音合起來，這是甚麼字？", focus:"s – u – n", options:[["☀️","sun"],["🐱","cat"],["⚽","ball"]], answer:0},
+      {type:"blend", prompt:"把聲音合起來，這是甚麼字？", focus:"m – a – p", options:[["🗺️","map"],["🧢","cap"],["🐶","dog"]], answer:0},
+      {type:"blend", prompt:"把聲音合起來，這是甚麼字？", focus:"p – i – g", options:[["🐷","pig"],["🐟","fish"],["🐸","frog"]], answer:0},
+      {type:"blend", prompt:"把聲音合起來，這是甚麼字？", focus:"h – e – n", options:[["🐔","hen"],["🧢","cap"],["🗺️","map"]], answer:0}
+    ]
+  },
+  {
+    id:"segmenting",
+    title:"4. 拆音能力",
+    icon:"✂️",
+    questions:[
+      {type:"segment", prompt:"cat 可以拆成哪三個聲音？", focus:"🐱 cat", options:[["c – a – t","c – a – t"],["c – o – t","c – o – t"],["m – a – p","m – a – p"]], answer:0},
+      {type:"segment", prompt:"dog 可以拆成哪三個聲音？", focus:"🐶 dog", options:[["d – a – g","d – a – g"],["d – o – g","d – o – g"],["b – o – g","b – o – g"]], answer:1},
+      {type:"segment", prompt:"sun 可以拆成哪三個聲音？", focus:"☀️ sun", options:[["s – u – n","s – u – n"],["s – a – n","s – a – n"],["f – u – n","f – u – n"]], answer:0},
+      {type:"segment", prompt:"map 可以拆成哪三個聲音？", focus:"🗺️ map", options:[["m – e – p","m – e – p"],["m – a – p","m – a – p"],["n – a – p","n – a – p"]], answer:1},
+      {type:"segment", prompt:"pig 可以拆成哪三個聲音？", focus:"🐷 pig", options:[["p – i – g","p – i – g"],["p – e – g","p – e – g"],["b – i – g","b – i – g"]], answer:0},
+      {type:"segment", prompt:"hen 可以拆成哪三個聲音？", focus:"🐔 hen", options:[["h – a – n","h – a – n"],["h – e – n","h – e – n"],["m – e – n","m – e – n"]], answer:1}
+    ]
+  }
+];
+
+let sectionIndex=0, questionIndex=0;
+let scores={letters:0,awareness:0,blending:0,segmenting:0};
+let answered=false;
+let selectedSectionIndex=null;
+
+function startTest(){
+  selectedSectionIndex=null;
+  sectionIndex=0;
+  questionIndex=0;
+  openQuiz();
+}
+
+function startAtSection(index){
+  selectedSectionIndex=index;
+  sectionIndex=index;
+  questionIndex=0;
+  openQuiz();
+}
+
+function openQuiz(){
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("quizScreen").classList.remove("hidden");
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered=false;
+  const sec=sections[sectionIndex];
+  const q=sec.questions[questionIndex];
+  document.getElementById("sectionPill").textContent=`${sec.icon} ${sec.title}`;
+  document.getElementById("counter").textContent=`第 ${questionIndex+1} / ${sec.questions.length} 題`;
+  const completedQuestions=selectedSectionIndex===null
+    ? sections.slice(0,sectionIndex).reduce((sum,item)=>sum+item.questions.length,0)+questionIndex
+    : questionIndex;
+  const activeQuestionCount=selectedSectionIndex===null
+    ? sections.reduce((sum,item)=>sum+item.questions.length,0)
+    : sec.questions.length;
+  document.getElementById("progressBar").style.width=`${(completedQuestions/activeQuestionCount)*100}%`;
+  document.getElementById("feedback").textContent="";
+  document.getElementById("feedback").className="feedback";
+  document.getElementById("nextBtn").classList.add("hidden");
+  document.getElementById("unmaskWrap").classList.toggle("hidden",q.type!=="blend");
+
+  let extra="";
+  if(q.type==="letterPicture"){
+    extra=`<div class="sound-seq">${q.letter}</div>`;
+  }else if(q.focus){
+    extra=`<div class="${q.type==="blend" ? "sound-seq" : "prompt-box"}">${q.focus}</div>`;
+  }
+  document.getElementById("questionArea").innerHTML=
+    `<div class="question">${q.prompt}</div>
+     <div class="sub">請選擇一個答案</div>${extra}`;
+
+  const options=document.getElementById("options");
+  options.innerHTML="";
+  q.options.forEach((opt,i)=>{
+    const btn=document.createElement("button");
+    const shouldMask=q.type==="blend";
+    btn.className=`option${shouldMask ? " masked" : ""}`;
+    btn.disabled=shouldMask;
+    const first=opt[0], label=opt[1];
+    const isEmoji=/\p{Extended_Pictographic}/u.test(first);
+    btn.innerHTML=isEmoji
+      ? `<span class="emoji">${first}</span><span>${label}</span>`
+      : `<span style="font-size:34px">${first}</span>`;
+    btn.onclick=()=>chooseAnswer(i,btn);
+    options.appendChild(btn);
+  });
+}
+
+function unmaskOptions(){
+  document.querySelectorAll(".option.masked").forEach(btn=>{
+    btn.classList.remove("masked");
+    btn.disabled=false;
+  });
+  document.getElementById("unmaskWrap").classList.add("hidden");
+}
+
+function chooseAnswer(i,btn){
+  if(answered) return;
+  answered=true;
+  const sec=sections[sectionIndex];
+  const q=sec.questions[questionIndex];
+  const all=[...document.querySelectorAll(".option")];
+  all.forEach(x=>x.classList.add("disabled"));
+  all[q.answer].classList.add("correct");
+  const feedback=document.getElementById("feedback");
+  if(i===q.answer){
+    scores[sec.id]++;
+    feedback.textContent="答對了！🌟";
+    feedback.classList.add("good");
+  }else{
+    btn.classList.add("wrong");
+    feedback.textContent="差一點點，再看看正確答案。";
+    feedback.classList.add("bad");
+  }
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function nextQuestion(){
+  const sec=sections[sectionIndex];
+  if(questionIndex<sec.questions.length-1){
+    questionIndex++;
+  }else if(selectedSectionIndex!==null){
+    showResults();
+    return;
+  }else if(sectionIndex<sections.length-1){
+    sectionIndex++;
+    questionIndex=0;
+  }else{
+    showResults();
+    return;
+  }
+  renderQuestion();
+}
+
+function levelFor(score){
+  if(score>=5) return {label:"進度良好", cls:"good", desc:"表現穩定，已具備這方面的良好基礎。"};
+  if(score>=3) return {label:"發展中", cls:"mid", desc:"已掌握部分能力，可透過短時間遊戲及重複練習鞏固。"};
+  return {label:"初步建立", cls:"early", desc:"這方面仍在起步階段，建議以輕鬆方式逐步加強。"};
+}
+
+function showResults(){
+  document.getElementById("quizScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+  document.getElementById("progressBar").style.width="100%";
+  const report=document.getElementById("reportGrid");
+  report.innerHTML="";
+  const reportedSections=selectedSectionIndex===null ? sections : [sections[selectedSectionIndex]];
+  reportedSections.forEach(sec=>{
+    const score=scores[sec.id];
+    const lv=levelFor(score);
+    const div=document.createElement("div");
+    div.className="result-card";
+    div.innerHTML=`
+      <h3>${sec.icon} ${sec.title}</h3>
+      <div class="score">${score} / 6</div>
+      <span class="level ${lv.cls}">${lv.label}</span>
+      <p>${lv.desc}</p>`;
+    report.appendChild(div);
+  });
+  const total=reportedSections.reduce((sum,sec)=>sum+scores[sec.id],0);
+  const maximum=reportedSections.reduce((sum,sec)=>sum+sec.questions.length,0);
+  let summary="";
+  const ratio=total/maximum;
+  if(selectedSectionIndex!==null && ratio>=.83){
+    summary="<strong>本部分觀察：</strong>表現穩定，已具備這方面的良好基礎，可繼續增加練習難度。";
+  }else if(selectedSectionIndex!==null && ratio>=.54){
+    summary="<strong>本部分觀察：</strong>已掌握部分能力，可透過短時間遊戲及重複練習鞏固。";
+  }else if(selectedSectionIndex!==null){
+    summary="<strong>本部分觀察：</strong>這方面仍在起步階段，建議以輕鬆方式逐步加強。";
+  }else if(ratio>=.83){
+    summary="<strong>整體觀察：</strong>整體phonics基礎偏良好，已能在多個範疇穩定運用。下一步可繼續增加可拼讀單字及短句閱讀。";
+  }else if(ratio>=.54){
+    summary="<strong>整體觀察：</strong>小朋友已建立部分phonics基礎，但不同範疇可能發展不平均。建議優先練習分數較低的兩個部分。";
+  }else{
+    summary="<strong>整體觀察：</strong>現階段仍屬基礎建立期。可先集中字母聲音和聽音遊戲，再慢慢進入CVC拼讀及拆音。";
+  }
+  document.getElementById("overallSummary").innerHTML=
+    `${summary}<br><br><strong>總分：</strong>${total} / ${maximum}`;
+}
+</script>
+</body>
+</html>
