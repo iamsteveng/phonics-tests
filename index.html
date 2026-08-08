@@ -165,6 +165,14 @@
       margin:14px auto 22px;
       max-width:600px;
     }
+    .answer-key{
+      text-align:center;
+      color:var(--muted);
+      font-size:16px;
+      margin:-8px auto 20px;
+      max-width:600px;
+    }
+    .answer-key b{color:#4a45c8;letter-spacing:.08em}
     .options{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
@@ -373,12 +381,12 @@ const sections = [
     title:"4. 拆音能力",
     icon:"✂️",
     questions:[
-      {type:"segment", prompt:"lip 可以拆成哪三個聲音？", focus:"💋 lip", options:[["l – i – p","l – i – p"],["l – e – p","l – e – p"],["n – i – p","n – i – p"]], answer:0},
-      {type:"segment", prompt:"tap 可以拆成哪三個聲音？", focus:"🚰 tap", options:[["t – o – p","t – o – p"],["t – a – p","t – a – p"],["d – a – p","d – a – p"]], answer:1},
-      {type:"segment", prompt:"pin 可以拆成哪三個聲音？", focus:"📌 pin", options:[["p – i – n","p – i – n"],["t – i – n","t – i – n"],["p – i – m","p – i – m"]], answer:0},
-      {type:"segment", prompt:"log 可以拆成哪三個聲音？", focus:"🪵 log", options:[["l – a – g","l – a – g"],["l – o – g","l – o – g"],["r – o – g","r – o – g"]], answer:1},
-      {type:"segment", prompt:"cab 可以拆成哪三個聲音？", focus:"🚕 cab", options:[["c – a – b","c – a – b"],["c – o – b","c – o – b"],["k – a – b","k – a – b"]], answer:0},
-      {type:"segment", prompt:"hut 可以拆成哪三個聲音？", focus:"🛖 hut", options:[["h – o – t","h – o – t"],["h – u – t","h – u – t"],["h – u – d","h – u – d"]], answer:1}
+      {type:"read", manual:true, prompt:"請小朋友把 lip 拆成三個聲音讀出來", focus:"💋 lip", answerKey:"l – i – p", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 tap 拆成三個聲音讀出來", focus:"🚰 tap", answerKey:"t – a – p", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 pin 拆成三個聲音讀出來", focus:"📌 pin", answerKey:"p – i – n", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 log 拆成三個聲音讀出來", focus:"🪵 log", answerKey:"l – o – g", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 cab 拆成三個聲音讀出來", focus:"🚕 cab", answerKey:"c – a – b", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0},
+      {type:"read", manual:true, prompt:"請小朋友把 hut 拆成三個聲音讀出來", focus:"🛖 hut", answerKey:"h – u – t", options:[["✅ 正確","correct"],["❌ 不正確","incorrect"]], answer:0}
     ]
   }
 ];
@@ -429,17 +437,29 @@ function renderQuestion(){
   let extra="";
   if(q.type==="letterPicture"){
     extra=`<div class="sound-seq">${q.letter}</div>`;
+  }else if(q.type==="read"){
+    extra=`<div class="prompt-box">${q.focus}</div>
+     <div class="answer-key">正確拆音：<b>${q.answerKey}</b>（供家長參考）</div>`;
   }else if(q.focus){
     extra=`<div class="${q.type==="blend" ? "sound-seq" : "prompt-box"}">${q.focus}</div>`;
   }
+  const subText=q.manual ? "請家長判斷小朋友的作答，然後選擇" : "請選擇一個答案";
   document.getElementById("questionArea").innerHTML=
     `<div class="question">${q.prompt}</div>
-     <div class="sub">請選擇一個答案</div>${extra}`;
+     <div class="sub">${subText}</div>${extra}`;
 
   const options=document.getElementById("options");
   options.innerHTML="";
+  options.style.gridTemplateColumns=q.manual ? "repeat(2,minmax(0,1fr))" : "";
   q.options.forEach((opt,i)=>{
     const btn=document.createElement("button");
+    if(q.manual){
+      btn.className="option judge";
+      btn.innerHTML=`<span style="font-size:22px;font-weight:800">${opt[0]}</span>`;
+      btn.onclick=()=>chooseAnswer(i,btn);
+      options.appendChild(btn);
+      return;
+    }
     const shouldMask=q.type==="blend";
     btn.className=`option${shouldMask ? " masked" : ""}`;
     btn.disabled=shouldMask;
@@ -468,16 +488,28 @@ function chooseAnswer(i,btn){
   const q=sec.questions[questionIndex];
   const all=[...document.querySelectorAll(".option")];
   all.forEach(x=>x.classList.add("disabled"));
-  all[q.answer].classList.add("correct");
   const feedback=document.getElementById("feedback");
-  if(i===q.answer){
-    scores[sec.id]++;
-    feedback.textContent="答對了！🌟";
-    feedback.classList.add("good");
+  if(q.manual){
+    btn.classList.add(i===q.answer ? "correct" : "wrong");
+    if(i===q.answer){
+      scores[sec.id]++;
+      feedback.textContent="已記錄：答對 ✓";
+      feedback.classList.add("good");
+    }else{
+      feedback.textContent="已記錄：答錯";
+      feedback.classList.add("bad");
+    }
   }else{
-    btn.classList.add("wrong");
-    feedback.textContent="差一點點，再看看正確答案。";
-    feedback.classList.add("bad");
+    all[q.answer].classList.add("correct");
+    if(i===q.answer){
+      scores[sec.id]++;
+      feedback.textContent="答對了！🌟";
+      feedback.classList.add("good");
+    }else{
+      btn.classList.add("wrong");
+      feedback.textContent="差一點點，再看看正確答案。";
+      feedback.classList.add("bad");
+    }
   }
   document.getElementById("nextBtn").classList.remove("hidden");
 }
