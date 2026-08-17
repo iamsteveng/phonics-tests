@@ -454,8 +454,9 @@ function renderQuestion(){
     btn.disabled=shouldMask;
     const first=opt[0], label=opt[1];
     const isEmoji=/\p{Extended_Pictographic}/u.test(first);
+    const hideLabel=q.type==="letterPicture";
     btn.innerHTML=isEmoji
-      ? `<span class="emoji">${first}</span><span>${label}</span>`
+      ? `<span class="emoji">${first}</span>${hideLabel ? "" : `<span>${label}</span>`}`
       : `<span style="font-size:34px">${first}</span>`;
     btn.onclick=()=>chooseAnswer(i,btn);
     options.appendChild(btn);
